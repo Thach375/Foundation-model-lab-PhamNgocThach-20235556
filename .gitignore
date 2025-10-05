@@ -1,0 +1,13 @@
+# Bỏ qua tất cả file PDF
+*.pdf
+
+# Bỏ qua file dữ liệu lớn
+data/
+*.csv
+
+# Bỏ qua notebook cache
+.ipynb_checkpoints/
+
+# Bỏ qua file tạm
+__pycache__/
+*.log
