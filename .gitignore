@@ -4,8 +4,6 @@
 *.pkl
 **/*.pkl
 # Bỏ qua file dữ liệu lớn
-data/
-*.csv
 
 # Bỏ qua notebook cache
 .ipynb_checkpoints/
