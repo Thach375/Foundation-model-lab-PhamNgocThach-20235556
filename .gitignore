@@ -3,6 +3,7 @@
 *.joblib
 *.pkl
 **/*.pkl
+**/*.png
 # Bỏ qua file dữ liệu lớn
 
 # Bỏ qua notebook cache
