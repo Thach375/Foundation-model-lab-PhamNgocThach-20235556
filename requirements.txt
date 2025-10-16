@@ -14,3 +14,4 @@ tqdm>=4.66.0
 imbalanced-learn
 pyvi
 torchvision
+opencv-python

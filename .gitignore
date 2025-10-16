@@ -6,6 +6,7 @@
 **/*.png
 **/*.pth
 **/*raw
+**/*runs
 # Bỏ qua file dữ liệu lớn
 
 # Bỏ qua notebook cache
