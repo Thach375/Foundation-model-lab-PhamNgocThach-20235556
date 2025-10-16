@@ -4,6 +4,8 @@
 *.pkl
 **/*.pkl
 **/*.png
+**/*.pth
+**/*raw
 # Bỏ qua file dữ liệu lớn
 
 # Bỏ qua notebook cache
