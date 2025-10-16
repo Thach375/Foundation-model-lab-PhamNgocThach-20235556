@@ -15,3 +15,7 @@ imbalanced-learn
 pyvi
 torchvision
 opencv-python
+torchsummary
+ray
+ray[tune]
+skorch
