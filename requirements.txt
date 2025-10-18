@@ -19,3 +19,4 @@ torchsummary
 ray
 ray[tune]
 skorch
+kaggle
