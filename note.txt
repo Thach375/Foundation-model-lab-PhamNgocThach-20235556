@@ -1,0 +1,6 @@
+Ex14: Image Captioning
+- ảnh input thường để 224x224
+- định dạng chuẩn NCHW [B, C, 224, 224]
+- C = 3 => RGB easiest to get the information
+
+- CNN (B, C=encoder_dim, H, W) --Flatten--> (B, num_pixels=H*W, encoder_dim)
