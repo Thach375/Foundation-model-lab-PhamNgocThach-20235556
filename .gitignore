@@ -8,7 +8,7 @@
 **/*raw
 **/*runs
 **/*data
-# Bỏ qua file dữ liệu lớn
+**/*rar
 
 # Bỏ qua notebook cache
 .ipynb_checkpoints/
