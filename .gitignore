@@ -1,4 +1,3 @@
-# Bỏ qua tất cả file PDF
 *.pdf
 *.joblib
 *.pkl
@@ -9,6 +8,7 @@
 **/*runs
 **/*data
 **/*rar
+/CS224N
 
 # Bỏ qua notebook cache
 .ipynb_checkpoints/
