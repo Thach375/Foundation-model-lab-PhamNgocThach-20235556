@@ -6,9 +6,13 @@
 **/*.pth
 **/*raw
 **/*runs
-**/*data
+ML-exercises/**/*data
+ML-homeworks/**/*data
+
 **/*rar
-/CS224N
+*.zip
+__MACOSX/
+
 
 # Bỏ qua notebook cache
 .ipynb_checkpoints/
