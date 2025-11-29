@@ -38,7 +38,17 @@ def precompute_rotary_emb(dim, max_positions):
     rope_cache = None
     # TODO: [part g]
     ### YOUR CODE HERE ###
-    pass
+    half_dim = dim // 2
+    positions = torch.arange(max_positions).unsqueeze(1)          # [T, 1]
+    i = torch.arange(half_dim).unsqueeze(0)                       # [1, D]
+    theta = 10000 ** (-2 * i / dim)                               # [1, D]
+    angles = positions * theta                                    # [T, D]
+
+    cos_vals = torch.cos(angles)
+    sin_vals = torch.sin(angles)
+
+    rope_cache = torch.stack([cos_vals, sin_vals], dim=-1)        # [T, D, 2]
+    
     ### END YOUR CODE ###
     return rope_cache
 
@@ -58,7 +68,23 @@ def apply_rotary_emb(x, rope_cache):
 
     rotated_x = None
     ### YOUR CODE HERE ###
-    pass
+    B, T, D = x.shape
+    half_D = D // 2
+    
+    # Truncate rope_cache to match sequence length T
+    rope_cache = rope_cache[:T, :, :]  # [T, half_D, 2]
+    cos_vals = rope_cache[:, :, 0]  # [T, half_D]
+    sin_vals = rope_cache[:, :, 1]  # [T, half_D]
+    
+    rope_complex = torch.view_as_complex(torch.stack((cos_vals, sin_vals), dim=-1))  # [T, half_D]
+
+    x_ = x.view(B, T, half_D, 2)  # [B, T, half_D, 2]
+    x_complex = torch.view_as_complex(x_)  # [B, T, half_D]
+    
+    # Apply rotation in complex space
+    rotated_complex = x_complex * rope_complex.unsqueeze(0)  # [B, T, half_D]
+    rotated_x = torch.view_as_real(rotated_complex).view(B, T, D)  # [B, T, D]
+    
     ### END YOUR CODE ###
     return rotated_x
 
@@ -86,7 +112,18 @@ class CausalSelfAttention(nn.Module):
             # Hint: The maximum sequence length is given by config.block_size.
             rope_cache = None
             ### YOUR CODE HERE ###
-            pass
+            dim = config.n_embd // config.n_head
+            half_dim = dim // 2 
+
+            positions = torch.arange(config.block_size).unsqueeze(1)        # [T, 1]
+            i = torch.arange(half_dim).unsqueeze(0)                         # [1, D/2]
+            theta = 10000 ** (-2 * i / dim)                                 # [1, D/2]
+            angles = positions * theta                                      # [T, D/2]
+
+            cos_vals = torch.cos(angles)
+            sin_vals = torch.sin(angles)
+
+            rope_cache = torch.stack([cos_vals, sin_vals], dim=-1)          # [T, D/2, 2]
             ### END YOUR CODE ###
 
             self.register_buffer("rope_cache", rope_cache)
@@ -112,7 +149,17 @@ class CausalSelfAttention(nn.Module):
         if self.rope:
             # TODO: [part g] Apply RoPE to the query and key.
             ### YOUR CODE HERE ###
-            pass
+            B, nh, T, hs = q.shape
+            
+            q_ = q.reshape(B * nh, T, hs)
+            k_ = k.reshape(B * nh, T, hs)
+            
+            q_rotated = apply_rotary_emb(q_, self.rope_cache)
+            k_rotated = apply_rotary_emb(k_, self.rope_cache)
+            
+            q = q_rotated.view(B, nh, T, hs)
+            k = k_rotated.view(B, nh, T, hs)
+            
             ### END YOUR CODE ###
 
         # causal self-attention; Self-attend: (B, nh, T, hs) x (B, nh, hs, T) -> (B, nh, T, T)

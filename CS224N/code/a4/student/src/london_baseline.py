@@ -12,7 +12,9 @@ def main():
 
     # Compute accuracy in the range [0.0, 100.0]
     ### YOUR CODE HERE ###
-    pass
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--eval_corpus_path', default=None)
+    args = parser.parse_args()
     ### END YOUR CODE ###
 
     return accuracy

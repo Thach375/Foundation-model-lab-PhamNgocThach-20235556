@@ -101,7 +101,56 @@ class CharCorruptionDataset(Dataset):
     def __getitem__(self, idx):
         # TODO [part e]: see spec above
         ### YOUR CODE HERE ###
-        pass
+        
+        # 0.
+        document = self.data[idx]
+        
+        # 1.
+        max_trunc_len = int(self.block_size * 7 / 8)
+        trunc_len = random.randint(4, max_trunc_len)
+        document = document[:trunc_len]
+        
+        # 2
+        # doc_len = len(document)
+        # if doc_len == 0:
+        #     prefix = ""
+        #     masked_content = ""
+        #     suffix = ""
+        # else:
+        #     # Randomly choose the length of masked_content
+        #     avg_masked_len = doc_len // 4
+        #     masked_len = random.randint(1, max(1, doc_len - 2))  # Ensure at least 1 char in prefix and suffix
+        #     start_idx = random.randint(0, doc_len - masked_len)
+        #     end_idx = start_idx + masked_len
+            
+        #     prefix = document[:start_idx]
+        #     masked_content = document[start_idx:end_idx]
+        #     suffix = document[end_idx:]
+            
+        left, right = 0, len(document)
+        while right - left >= len(document)//4:
+            left = random.randint(0, right)
+            right = random.randint(left, len(document))
+        
+        prefix = document[:left]
+        masked_content = document[left:right]
+        suffix = document[right:]
+        
+        # 3
+        masked_string = prefix + self.MASK_CHAR + suffix + self.MASK_CHAR + masked_content
+        masked_string += self.PAD_CHAR * (self.block_size + 1 - len(masked_string))
+                
+        document = prefix + self.MASK_CHAR + suffix
+        
+        # 4
+        input = masked_string[:-1]
+        output = masked_string[1:]
+        
+        # 5
+        x = torch.tensor([self.stoi[c] for c in input], dtype=torch.long)
+        y = torch.tensor([self.stoi[c] for c in output], dtype=torch.long)
+        return x, y
+        
         ### END YOUR CODE ###
 
 
